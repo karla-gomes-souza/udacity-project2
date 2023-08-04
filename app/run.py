@@ -1,7 +1,6 @@
 import json
 import plotly
 import pandas as pd
-import joblib
 
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
@@ -9,6 +8,7 @@ from nltk.tokenize import word_tokenize
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
+import joblib
 from sqlalchemy import create_engine
 
 
@@ -42,9 +42,11 @@ def index():
     # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
+
+    grouped_df_cat = df.iloc[:, 4:].melt().rename(columns={"variable" : "category"}).groupby("category").sum().reset_index()
     
     # create visuals
-    # TODO: Below is an example - modify to create your own visuals
+    # 1st viz
     graphs = [
         {
             'data': [
@@ -63,7 +65,44 @@ def index():
                     'title': "Genre"
                 }
             }
-        }
+        },
+        #2nd viz
+        {
+            'data': [
+                Bar(
+                    x=grouped_df_cat["category"],
+                    y=grouped_df_cat["value"]
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Categories',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Category"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=grouped_df_cat["category"],
+                    y=grouped_df_cat["value"]
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Categories',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Category"
+                }
+            }
+        },
     ]
     
     # encode plotly graphs in JSON

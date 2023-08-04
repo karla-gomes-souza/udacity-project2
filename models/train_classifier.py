@@ -20,8 +20,17 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.multioutput import MultiOutputClassifier
 
 
-def load_data(database_filepath):
-    # load data from database
+def load_data(database_filepath: str):
+    """"
+    Load data from database
+
+    Args:
+        database_filepath: string with database filepath  
+    Returns:
+        X: Series with features
+        y: Pandas dataframe with targets
+        target_names: list of target names
+    """
     engine = create_engine("sqlite:///"+ database_filepath)
     df = pd.read_sql_table("DisasterResponse", engine)
     X = df["message"]
@@ -30,7 +39,15 @@ def load_data(database_filepath):
 
     return X, y, target_names
 
-def tokenize(text):
+def tokenize(text:str):
+    """"
+    Get tokens for sentences
+
+    Args:
+        text: str  
+    Returns:
+        clean_tokens: list with tokens
+    """
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -42,6 +59,14 @@ def tokenize(text):
     return clean_tokens
 
 def build_model():
+    """"
+    Pipeline to train and optimize the ML model
+
+    Args:
+        None
+    Returns:
+        Optimized ML model
+    """
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize)),
         ('tfidf', TfidfTransformer()),
@@ -59,6 +84,17 @@ def build_model():
     return cv
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    """"
+    Tests and prints the evaluation of the model
+
+    Args:
+        model: model file 
+        X_test: Data with set of splitted test features
+        Y_test: Data with splitted target points
+        category_names: list of available categories
+    Returns:
+        Prints the evaluation metrics for the model
+    """
     Y_pred = model.predict(X_test)
     Y_pred = pd.DataFrame(Y_pred, columns=Y_test.columns)
     for category in category_names:
@@ -66,7 +102,17 @@ def evaluate_model(model, X_test, Y_test, category_names):
         print(classification_report(Y_test[category], Y_pred[category]))
 
 def save_model(model, model_filepath):
-    pickle.dump(model, open(model_filepath, 'wb'))
+    """
+    Saves the model to pickle
+    
+    Args:
+        model: model file
+        model_filepath: model filepath
+    
+    Returns:
+        None
+    """
+    pickle.dump(model, open("models/"+model_filepath, 'wb'))
 
 
 def main():
