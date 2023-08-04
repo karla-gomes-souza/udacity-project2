@@ -85,24 +85,6 @@ def index():
                 }
             }
         },
-        {
-            'data': [
-                Bar(
-                    x=grouped_df_cat["category"],
-                    y=grouped_df_cat["value"]
-                )
-            ],
-
-            'layout': {
-                'title': 'Distribution of Categories',
-                'yaxis': {
-                    'title': "Count"
-                },
-                'xaxis': {
-                    'title': "Category"
-                }
-            }
-        },
     ]
     
     # encode plotly graphs in JSON
