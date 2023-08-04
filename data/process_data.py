@@ -2,9 +2,15 @@ import sys
 import pandas as pd
 from sqlalchemy import create_engine
 
-def load_data(messages_filepath, categories_filepath):
+def load_data(messages_filepath: str, categories_filepath: str) -> pd.DataFrame:
     """"
-    
+    Load data from different files.
+
+    Args:
+        messages_filepath: string containing the filepath for the messages dataframe
+        categories_filepath: string containing the filepath for the categories dataframe
+    Returns:
+        Pandas Dataframe
     """
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
@@ -14,11 +20,18 @@ def load_data(messages_filepath, categories_filepath):
 
     return df
 
-def clean_data(df):
+def clean_data(df: pd.DataFrame) -> pd.DataFrame:
+    """"
+    Preprocess and clean dataframe
+
+    Args:
+        df: Pandas dataframe to be cleaned
+    Returns:
+        Pandas Dataframe
+    """
 
     # create a dataframe of the 36 individual category columns
     categories = df["categories"].str.split(";", expand=True)
-    
     # select the first row of the categories dataframe
     row = categories.iloc[0]
 
@@ -32,7 +45,6 @@ def clean_data(df):
     for column in categories:
         # set each value to be the last character of the string
         categories[column] = categories[column].str.split("-").str[1]
-    
         # convert column from string to numeric
         categories[column] = categories[column].astype(int)
     
@@ -44,7 +56,17 @@ def clean_data(df):
     return df
 
 
-def save_data(df, database_filename):
+def save_data(df: pd.DataFrame, database_filename: str) -> None:
+    """"
+    Save dataframe to sql
+
+    Args:
+        df: Pandas dataframe to be saved
+        database_filename: str with filename
+    
+    Returns:
+        None
+    """
     engine = create_engine("sqlite:///"+database_filename)
     df.to_sql('DisasterResponse', engine, index=False)  
 
