@@ -20,8 +20,29 @@ Project 2 - Data Scientist Nanodegree (Udacity)
 
 3. Go to http://0.0.0.0:3001/
 
-#### Proejct Motivation
-This project is a part of the Data Scientist Nanodegree from Udacity. The ideia is to apply the learned skills in the data from Appen, building a model for an API that classifies disaster messages. This model has to have processes such as ETL, ML pipeline and visualization with Flask.
+#### Project Motivation
+This project is a part of the Data Scientist Nanodegree from Udacity. The goal is to apply the learned skills in the data from Appen, building a model for an API that classifies disaster messages, so that the user can sent the messages to an appropriate disaster relief agency.
+There is also a web app built with Flask where an emergency worker can input a new message and get classification results in several categories. 
+
 
 #### File descriptions
 There folder app constains the file with the flask web application, the models file contains the saved model and the data file constains the dataset.
+
+- Root Directory
+    - app
+        - run.py
+            - templates
+                - go.html
+                - master.html
+    - data
+        - process_data.py
+        - disaster_categories.csv
+        - disaster_messages.csv
+        - DisasterResponse.db
+    - model
+        - train_classifier.py
+        - classifier.pkl
+
+
+
+
