@@ -48,10 +48,14 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
         # convert column from string to numeric
         categories[column] = categories[column].astype(int)
     
+
     df = df.drop(columns=["categories"], axis=1)
     df = df.merge(categories, how="left", left_index=True, right_index=True)
 
+    #drop duplicates
     df = df.drop_duplicates()
+    #binarize
+    df = df[df["related"].between(0, 1)]
 
     return df
 
@@ -68,7 +72,7 @@ def save_data(df: pd.DataFrame, database_filename: str) -> None:
         None
     """
     engine = create_engine("sqlite:///"+database_filename)
-    df.to_sql('DisasterResponse', engine, index=False)  
+    df.to_sql('DisasterResponse', engine, index=False, if_exists='replace')  
 
 
 def main():
